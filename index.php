@@ -17,13 +17,12 @@
             color: #fff;
         }
 
-        /* Header */
         header {
             background-color: rgba(0, 0, 0, 0.8);
             backdrop-filter: blur(10px);
             padding: 15px 50px;
-            display: flex;
-            justify-content: space-between;
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
             align-items: center;
             position: fixed;
             width: calc(100% - 100px);
@@ -62,6 +61,8 @@
             display: flex;
             gap: 30px;
             align-items: center;
+            justify-content: center;
+            flex: 1;
         }
 
         nav a {
@@ -75,16 +76,9 @@
             color: #f9e103;
         }
 
-        .search-bar {
-            padding: 8px 15px;
-            width: 300px;
-            border: none;
-            border-radius: 5px;
-            background-color: #fff;
-        }
-
         .auth-buttons {
             display: flex;
+            justify-content: flex-end; 
             gap: 15px;
         }
 
@@ -105,19 +99,9 @@
             color: #fff;
         }
 
-        .btn-login::before {
-            content: '🔒';
-            font-size: 18px;
-        }
-
         .btn-signup {
             color: #f9e103;
             font-weight: normal;
-        }
-
-        .btn-signup::before {
-            content: '📝';
-            font-size: 18px;
         }
 
         .btn:hover {
@@ -284,11 +268,6 @@
                 top: 10px;
             }
 
-            .search-bar {
-                width: 100%;
-                margin: 10px 0;
-            }
-
             .hero::before {
                 font-size: 60px;
                 letter-spacing: 5px;
@@ -316,7 +295,7 @@
         <nav>
             <a href="#movies">Movies</a>
             <a href="cinemas.php">Cinemas</a>
-            <input type="text" class="search-bar" placeholder="Search movies...">
+            <a href="tickets.php">Tickets</a>
         </nav>
         <div class="auth-buttons">
             <a href="login.php" class="btn btn-login">Login</a>
