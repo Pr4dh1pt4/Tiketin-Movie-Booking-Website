@@ -23,8 +23,8 @@
             background-color: rgba(0, 0, 0, 0.8);
             backdrop-filter: blur(10px);
             padding: 15px 50px;
-            display: flex;
-            justify-content: space-between;
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
             align-items: center;
             position: fixed;
             width: calc(100% - 100px);
@@ -36,6 +36,7 @@
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
             border-radius: 20px;
             border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
         }
 
         .logo {
@@ -81,6 +82,7 @@
 
         .auth-buttons {
             display: flex;
+            justify-content: flex-end;
             gap: 15px;
         }
 
@@ -101,18 +103,8 @@
             color: #fff;
         }
 
-        .btn-login::before {
-            content: '🔒';
-            font-size: 18px;
-        }
-
         .btn-signup {
             color: #f9e103;
-        }
-
-        .btn-signup::before {
-            content: '📝';
-            font-size: 18px;
         }
 
         /* Movie Info Section */
@@ -170,7 +162,9 @@
         }
 
         .booking-header {
-            display: flex;
+            display: grid;
+            grid-template-columns: 2fr 1.5fr; /* kiri lebih lebar dari kanan */
+            gap: 40px;
             justify-content: space-between;
             padding: 30px;
             border-bottom: 1px solid #2a2a2a;
@@ -504,8 +498,8 @@
         <a href="index.php" class="logo">Tiketin</a>
         <nav>
             <a href="index.php">Movies</a>
-            <a href="#cinemas">Cinemas</a>
-            <input type="text" class="search-bar" placeholder="Search movies...">
+            <a href="cinemas.php">Cinemas</a>
+            <a href="tickets.php">Tickets</a>
         </nav>
         <div class="auth-buttons">
             <a href="#login" class="btn btn-login">Login</a>
@@ -608,7 +602,7 @@
     <div class="booking-container">
         <div class="booking-header">
             <div class="date-selector">
-                <h3>Date</h3>
+                <h3>DATE</h3>
                 <div class="date-scroll-wrapper">
                     <button class="scroll-btn" id="scrollLeftBtn" onclick="scrollDates('left')">‹</button>
                     <div class="dates-scroll-container" id="datesScrollContainer">
