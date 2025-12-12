@@ -17,13 +17,12 @@
             color: #fff;
         }
 
-        /* Header (copy dari index.php) */
         header {
             background-color: rgba(0, 0, 0, 0.8);
             backdrop-filter: blur(10px);
             padding: 15px 50px;
-            display: flex;
-            justify-content: space-between;
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
             align-items: center;
             position: fixed;
             width: calc(100% - 100px);
@@ -52,7 +51,7 @@
         }
 
         .logo::before {
-            content: url('Vector.png');
+            content: url('assets/Vector.png');
             margin-right: 10px;
             margin-top: 5px;
         }
@@ -61,6 +60,8 @@
             display: flex;
             gap: 30px;
             align-items: center;
+            justify-content: center;  
+            flex: 1;
         }
 
         nav a {
@@ -74,16 +75,9 @@
             color: #f9e103;
         }
 
-        .search-bar {
-            padding: 8px 15px;
-            width: 300px;
-            border: none;
-            border-radius: 5px;
-            background-color: #fff;
-        }
-
         .auth-buttons {
             display: flex;
+            justify-content: flex-end;
             gap: 15px;
         }
 
@@ -100,11 +94,14 @@
             font-size: 16px;
         }
 
-        .btn-login { color: #fff; }
-        .btn-login::before { content: '🔒'; }
+        .btn-login {
+            color: #fff;
+        }
 
-        .btn-signup { color: #f9e103; }
-        .btn-signup::before { content: '📝'; }
+        .btn-signup {
+            color: #f9e103;
+            font-weight: normal;
+        }
 
         /* Hero */
         .hero {
@@ -211,7 +208,7 @@
     <nav>
         <a href="index.php">Movies</a>
         <a href="cinemas.php" style="color: #f9e103;">Cinemas</a>
-        <input type="text" class="search-bar" placeholder="Search cinemas...">
+        <a href="tickets.php">Tickets</a>
     </nav>
     <div class="auth-buttons">
         <a href="login.php" class="btn btn-login">Login</a>
