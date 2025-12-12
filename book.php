@@ -48,7 +48,7 @@
         }
 
         .logo::before {
-            content: url('Vector.png');
+            content: url('assets/Vector.png');
             margin-right: 10px;
             margin-top: 5px;
             font-size: 28px;
@@ -186,24 +186,101 @@
             color: #ccc;
         }
 
+        .date-scroll-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            max-width: 600px; /* Limit width to show only few dates */
+        }
+
+        .scroll-btn {
+            background-color: #2a2a2a;
+            border: 1px solid #3a3a3a;
+            border-radius: 50%;
+            width: 35px;
+            height: 35px;
+            min-width: 35px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            color: #fff;
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+
+        .scroll-btn:hover:not(:disabled) {
+            background-color: #f9e103;
+            color: #000;
+            transform: scale(1.1);
+        }
+
+        .scroll-btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        .dates-scroll-container {
+            overflow-x: auto;
+            overflow-y: hidden;
+            scrollbar-width: none; /* Firefox */
+            -ms-overflow-style: none; /* IE and Edge */
+            flex: 1;
+        }
+
+        .dates-scroll-container::-webkit-scrollbar {
+            display: none; /* Chrome, Safari, Opera */
+        }
+
         .dates {
             display: flex;
             gap: 10px;
+            scroll-behavior: smooth;
+            width: max-content; /* Make it scrollable */
         }
 
         .date-btn {
-            padding: 10px 20px;
+            padding: 12px 18px;
             background-color: #2a2a2a;
             border: none;
-            border-radius: 5px;
+            border-radius: 10px;
             color: #fff;
             cursor: pointer;
             transition: all 0.3s;
             font-size: 14px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+            min-width: 75px;
+            flex-shrink: 0;
+        }
+
+        .date-btn .day-name {
+            font-weight: bold;
+            font-size: 12px;
+            color: #888;
+        }
+
+        .date-btn .date-number {
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .date-btn .month-name {
+            font-size: 11px;
+            color: #888;
         }
 
         .date-btn:hover, .date-btn.active {
             background-color: #f9e103;
+            color: #000;
+        }
+
+        .date-btn.active .day-name,
+        .date-btn.active .month-name {
             color: #000;
         }
 
@@ -532,12 +609,14 @@
         <div class="booking-header">
             <div class="date-selector">
                 <h3>Date</h3>
-                <div class="dates">
-                    <button class="date-btn">Mon</button>
-                    <button class="date-btn active">Tue</button>
-                    <button class="date-btn">Wed</button>
-                    <button class="date-btn">Thu</button>
-                    <button class="date-btn">Fri</button>
+                <div class="date-scroll-wrapper">
+                    <button class="scroll-btn" id="scrollLeftBtn" onclick="scrollDates('left')">‹</button>
+                    <div class="dates-scroll-container" id="datesScrollContainer">
+                        <div class="dates" id="datesContainer">
+                            <!-- Dates will be generated dynamically -->
+                        </div>
+                    </div>
+                    <button class="scroll-btn" id="scrollRightBtn" onclick="scrollDates('right')">›</button>
                 </div>
             </div>
             <div class="time-selector">
@@ -545,10 +624,10 @@
                 <div class="times">
                     <button class="time-btn active">11.15</button>
                     <button class="time-btn">12.40</button>
-                    <button class="time-btn">12.40</button>
-                    <button class="time-btn">12.40</button>
-                    <button class="time-btn">12.40</button>
-                    <button class="time-btn">12.40</button>
+                    <button class="time-btn">14.20</button>
+                    <button class="time-btn">16.45</button>
+                    <button class="time-btn">19.00</button>
+                    <button class="time-btn">21.30</button>
                 </div>
             </div>
         </div>
@@ -613,6 +692,96 @@
     <script>
         const seatPrice = 35000;
         let selectedSeats = [];
+        let selectedDate = null;
+        let selectedTime = null;
+
+        // Scroll dates function
+        function scrollDates(direction) {
+            const container = document.getElementById('datesScrollContainer');
+            const scrollAmount = 250; // Scroll by approximately 3 dates
+            
+            if (direction === 'left') {
+                container.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
+            } else {
+                container.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+            }
+            
+            // Update button states after scroll
+            setTimeout(updateScrollButtons, 300);
+        }
+
+        // Update scroll button states
+        function updateScrollButtons() {
+            const container = document.getElementById('datesScrollContainer');
+            const leftBtn = document.getElementById('scrollLeftBtn');
+            const rightBtn = document.getElementById('scrollRightBtn');
+            
+            // Check if at start
+            if (container.scrollLeft <= 0) {
+                leftBtn.disabled = true;
+            } else {
+                leftBtn.disabled = false;
+            }
+            
+            // Check if at end
+            if (container.scrollLeft + container.clientWidth >= container.scrollWidth - 1) {
+                rightBtn.disabled = true;
+            } else {
+                rightBtn.disabled = false;
+            }
+        }
+
+        // Generate dates dynamically (next 14 days for scrolling)
+        function generateDates() {
+            const datesContainer = document.getElementById('datesContainer');
+            const today = new Date();
+            const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+            const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+            
+            // Generate 14 days instead of 7 for scrolling
+            for (let i = 0; i < 14; i++) {
+                const date = new Date(today);
+                date.setDate(today.getDate() + i);
+                
+                const dayName = days[date.getDay()];
+                const dateNumber = date.getDate();
+                const monthName = months[date.getMonth()];
+                const fullDate = date.toISOString().split('T')[0];
+                
+                const btn = document.createElement('button');
+                btn.className = 'date-btn' + (i === 0 ? ' active' : '');
+                btn.dataset.date = fullDate;
+                btn.innerHTML = `
+                    <span class="day-name">${dayName}</span>
+                    <span class="date-number">${dateNumber}</span>
+                    <span class="month-name">${monthName}</span>
+                `;
+                
+                btn.addEventListener('click', function() {
+                    document.querySelectorAll('.date-btn').forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    selectedDate = this.dataset.date;
+                    console.log('Selected date:', selectedDate);
+                });
+                
+                datesContainer.appendChild(btn);
+                
+                // Set initial selected date
+                if (i === 0) {
+                    selectedDate = fullDate;
+                }
+            }
+            
+            // Initialize scroll buttons
+            updateScrollButtons();
+            
+            // Add scroll listener to update buttons
+            const container = document.getElementById('datesScrollContainer');
+            container.addEventListener('scroll', updateScrollButtons);
+        }
+
+        // Initialize dates on page load
+        generateDates();
 
         // Seat selection logic
         document.querySelectorAll('.seat:not(.occupied)').forEach(seat => {
@@ -644,9 +813,11 @@
             } else {
                 let html = '';
                 selectedSeats.forEach(seatId => {
+                    const rowLabel = seatId.split('-')[0];
+                    const seatNumber = seatId.split('-')[1];
                     html += `
                         <div class="seat-item">
-                            <span>D ${seatId.split('-')[1]}</span>
+                            <span>${rowLabel}${seatNumber}</span>
                             <span>Rp${seatPrice.toLocaleString('id-ID')}</span>
                             <button class="remove-seat" onclick="removeSeat('${seatId}')">×</button>
                         </div>
@@ -667,28 +838,71 @@
             updateOrderSummary();
         }
 
-        // Date selector
-        document.querySelectorAll('.date-btn').forEach(btn => {
-            btn.addEventListener('click', function() {
-                document.querySelectorAll('.date-btn').forEach(b => b.classList.remove('active'));
-                this.classList.add('active');
-            });
-        });
-
         // Time selector
         document.querySelectorAll('.time-btn').forEach(btn => {
             btn.addEventListener('click', function() {
                 document.querySelectorAll('.time-btn').forEach(b => b.classList.remove('active'));
                 this.classList.add('active');
+                selectedTime = this.textContent;
+                console.log('Selected time:', selectedTime);
             });
         });
+
+        // Set initial time
+        selectedTime = document.querySelector('.time-btn.active').textContent;
 
         // Checkout
         document.getElementById('checkoutBtn').addEventListener('click', function() {
             if (selectedSeats.length > 0) {
-                alert(`Booking confirmed!\nSeats: ${selectedSeats.join(', ')}\nTotal: Rp${(selectedSeats.length * seatPrice).toLocaleString('id-ID')}`);
+                const bookingDetails = `
+                Booking Confirmed! 🎬
+
+                Movie: <?php echo addslashes($currentMovie['title']); ?>
+                Date: ${formatDate(selectedDate)}
+                Time: ${selectedTime}
+                Seats: ${selectedSeats.join(', ')}
+                Total: Rp${(selectedSeats.length * seatPrice).toLocaleString('id-ID')}
+                `;
+                alert(bookingDetails);
+                
+                // Optional: Send to backend
+                // submitBooking(selectedDate, selectedTime, selectedSeats);
             }
         });
+
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+            const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+            
+            return `${days[date.getDay()]}, ${date.getDate()} ${months[date.getMonth()]} ${date.getFullYear()}`;
+        }
+
+        // Optional: Function to submit booking to backend
+        function submitBooking(date, time, seats) {
+            const bookingData = {
+                movie_id: <?php echo $movieId; ?>,
+                date: date,
+                time: time,
+                seats: seats,
+                total: seats.length * seatPrice
+            };
+            
+            // Send to backend via fetch/AJAX
+            // fetch('process_booking.php', {
+            //     method: 'POST',
+            //     headers: {'Content-Type': 'application/json'},
+            //     body: JSON.stringify(bookingData)
+            // })
+            // .then(response => response.json())
+            // .then(data => {
+            //     if(data.success) {
+            //         window.location.href = 'payment.php?booking_id=' + data.booking_id;
+            //     }
+            // });
+            
+            console.log('Booking data:', bookingData);
+        }
     </script>
 </body>
 </html>
