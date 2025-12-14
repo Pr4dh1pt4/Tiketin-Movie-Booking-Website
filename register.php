@@ -1,3 +1,44 @@
+<?php
+require_once 'config.php'; 
+$_SESSION['login_source'] = 'register';
+
+if (isset($client)) {
+    $google_login_url = $client->createAuthUrl();
+} else {
+    $google_login_url = '#';
+}
+
+if (isset($_GET['pesan'])) {
+    
+    $pesan = $_GET['pesan'];
+    $alert_msg = "";
+
+    if ($pesan == "gagal") {
+        $alert_msg = "Login Gagal! Username atau Password salah.";
+    } 
+    else if ($pesan == "pass_missmatch") {
+        $alert_msg = "Password yang Anda masukkan salah!";
+    } 
+    else if ($pesan == "google_unregistered") {
+        $alert_msg = "Akun Google belum terdaftar!";
+    }
+    else if ($pesan == "email_taken") {
+        $alert_msg = "Email sudah terdaftar!";
+    } 
+    else if ($pesan == "success") {
+        $alert_msg = "Registration successful! Welcome to Ticketin!";
+    } 
+    // Tampilkan Javascript Alert jika pesan tidak kosong
+    if ($alert_msg != "") {
+        echo 
+        "<script>
+            window.history.replaceState(null, null, window.location.pathname);
+            alert('$alert_msg');
+        </script>";
+    }
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -260,6 +301,7 @@
             align-items: center;
             justify-content: center;
             gap: 8px;
+            text-decoration: none;
         }
 
         .btn-social:hover {
@@ -406,12 +448,10 @@
         </div>
 
         <div class="social-login">
-            <button class="btn-social">
-                <span>📘</span> Facebook
-            </button>
-            <button class="btn-social">
+            
+            <a href="<?php echo $google_login_url; ?>" class="btn-social">
                 <span>🔍</span> Google
-            </button>
+            </a>
         </div>
 
         <div class="login-link">
@@ -457,25 +497,24 @@
         const confirmPassword = document.getElementById('confirm_password');
         
         form.addEventListener('submit', function(e) {
-            e.preventDefault();
             
             const password = passwordInput.value;
             const confirm = confirmPassword.value;
             
             if (password !== confirm) {
+                e.preventDefault();
                 alert('Passwords do not match!');
                 return;
             }
             
             if (password.length < 8) {
+                e.preventDefault();
                 alert('Password must be at least 8 characters long!');
                 return;
             }
-            
             // If validation passes, submit the form
-            alert('Registration successful! Welcome to Ticketor!');
-            // form.submit(); // Uncomment this when you have backend
-            window.location.href = 'login.php';
+            // // form.submit(); // Uncomment this when you have backend
+            // window.location.href = 'login.php';
         });
     </script>
 </body>

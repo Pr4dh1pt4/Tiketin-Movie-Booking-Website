@@ -1,3 +1,7 @@
+<?php
+session_start();
+?> 
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -81,6 +85,49 @@
             gap: 15px;
         }
 
+        .user-dropdown {
+            position: relative;
+        }
+
+        .user-name-btn {
+            color: #fff; 
+            text-decoration: none;
+            font-weight: bold;
+            padding: 10px;
+            display: block;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            right: 0;
+            background-color: #1a1a1a;
+            min-width: 100%;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            border-radius: 5px;
+            z-index: 1;
+            border: 1px solid #333;
+            border-radius: 10px;
+        }
+
+        .dropdown-content a {
+            color: #fff;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+            font-size: 14px;
+            border-radius: 10px;
+        }
+
+        .dropdown-content a:hover {
+            background-color: #f9e103;
+            color: #000;
+        }
+
+        .user-dropdown:hover .dropdown-content {
+            display: block;
+        }
+
         .btn {
             padding: 8px 15px;
             text-decoration: none;
@@ -101,6 +148,10 @@
         .btn-signup {
             color: #f9e103;
             font-weight: normal;
+        }
+        
+        nav a:hover, nav a.active {
+            color: #f9e103;
         }
 
         /* Hero */
@@ -199,22 +250,88 @@
             color: #888;
         }
 
+        @media (max-width: 768px) {
+            header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                width: 92%;
+                padding: 12px 15px;
+                top: 15px;
+                grid-template-columns: none;
+            }
+
+            .logo {
+                font-size: 20px;
+            }
+
+            .logo::before {
+                font-size: 24px;
+            }
+
+            .auth-buttons {
+                gap: 10px;
+            }
+
+            .user-name-btn, .btn {
+                font-size: 14px;
+                padding: 5px;
+            }
+
+            .hero {
+                height: 250px;
+                padding-top: 80px;
+            }
+
+            .hero h1 {
+                font-size: 32px;
+                padding: 0 20px;
+            }
+
+            .cinemas-section {
+                padding: 20px;
+                margin-top: -40px;
+            }
+
+            .cinema-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .cinema-card {
+                width: 100%;
+            }
+
+            .cinema-image {
+                height: 150px;
+            }
+        }
     </style>
 </head>
 <body>
-
-<header>
-    <div class="logo">Tiketin</div>
-    <nav>
-        <a href="index.php">Movies</a>
-        <a href="cinemas.php" style="color: #f9e103;">Cinemas</a>
-        <a href="tickets.php">Tickets</a>
-    </nav>
-    <div class="auth-buttons">
-        <a href="login.php" class="btn btn-login">Login</a>
-        <a href="register.php" class="btn btn-signup">Sign Up</a>
-    </div>
-</header>
+    <header> 
+        <a class="logo">Tiketin</a>
+        <nav>
+            <a href="index.php">Movies</a>
+            <a href="cinemas.php" class="active">Cinemas</a>
+            <a href="tickets.php">Tickets</a>
+        </nav>
+        <div class="auth-buttons"> 
+            <?php if (isset($_SESSION['nama_lengkap'])): ?>
+                <div class="user-dropdown">
+                    <a href="#" class="user-name-btn">
+                        <?php echo htmlspecialchars($_SESSION['nama_lengkap']); ?> ▾
+                    </a>
+                    <div class="dropdown-content">
+                        <a href="logout.php" class="logout-link">Logout</a>
+                    </div>
+                </div>
+            <?php else: ?>
+                <a href="login.php" class="btn btn-login">Login</a>
+                <a href="register.php" class="btn btn-signup">Sign Up</a>
+            <?php endif; ?>
+        </div>
+    </header>
 
 <section class="hero">
     <h1>Find Your Cinema</h1>
@@ -274,7 +391,7 @@
 </section>
 
 <footer>
-    <p>&copy; 2024 Tiketin. All rights reserved.</p>
+    <p>&copy; 2025 Tiketin. All rights reserved.</p>
 </footer>
 
 </body>

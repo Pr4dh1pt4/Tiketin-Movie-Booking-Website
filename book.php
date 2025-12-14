@@ -1,3 +1,7 @@
+<?php
+session_start(); 
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -84,6 +88,92 @@
             display: flex;
             justify-content: flex-end;
             gap: 15px;
+        }
+
+                .user-dropdown {
+            position: relative;
+        }
+
+        .user-name-btn {
+            color: #fff; 
+            text-decoration: none;
+            font-weight: bold;
+            padding: 10px;
+            display: block;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            right: 0;
+            background-color: #1a1a1a;
+            min-width: 100%;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            border-radius: 5px;
+            z-index: 1;
+            border: 1px solid #333;
+            border-radius: 10px;
+        }
+
+        .dropdown-content a {
+            color: #fff;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+            font-size: 14px;
+            border-radius: 10px;
+        }
+
+        .dropdown-content a:hover {
+            background-color: #f9e103;
+            color: #000;
+        }
+
+        .user-dropdown:hover .dropdown-content {
+            display: block;
+        }
+
+        .user-dropdown {
+            position: relative;
+        }
+
+        .user-name-btn {
+            color: #fff; 
+            text-decoration: none;
+            font-weight: bold;
+            padding: 10px;
+            display: block;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            right: 0;
+            background-color: #1a1a1a;
+            min-width: 100%;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            border-radius: 5px;
+            z-index: 1;
+            border: 1px solid #333;
+            border-radius: 10px;
+        }
+
+        .dropdown-content a {
+            color: #fff;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+            font-size: 14px;
+            border-radius: 10px;
+        }
+
+        .dropdown-content a:hover {
+            background-color: #f9e103;
+            color: #000;
+        }
+
+        .user-dropdown:hover .dropdown-content {
+            display: block;
         }
 
         .btn {
@@ -446,6 +536,12 @@
             border-bottom: 1px solid #2a2a2a;
         }
 
+        .seat.my-booking {
+            background-color: #3498db; 
+            border-color: #3498db;
+            cursor: not-allowed; 
+        }
+
         .seat-item:last-child {
             border-bottom: none;
         }
@@ -491,19 +587,152 @@
             cursor: not-allowed;
             transform: none;
         }
+
+        .seat-gap {
+            width: 40px;
+            flex-shrink: 0;
+        }
+
+        .empty-seats {
+            color: #888;
+            text-align: center;
+            margin: 10px 0;
+        }
+
+        .hidden-form {
+            display: none;
+        }
+
+        footer {
+            background-color: #000;
+            padding: 30px;
+            text-align: center;
+            margin-top: 50px;
+            color: #888;
+        }
+
+        @media (max-width: 768px) {
+            header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                width: 92%; 
+                padding: 12px 15px;
+                top: 15px;            
+                grid-template-columns: none
+            }
+            
+            .logo {
+                font-size: 20px;
+            }
+
+            .logo::before {
+                font-size: 24px;
+            }
+
+            .auth-buttons {
+                gap: 10px;
+            }
+
+            .user-name-btn {
+                font-size: 14px;
+                padding: 5px;
+            }
+
+            .movie-info {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+                padding: 20px;
+                margin-top: 80px;
+            }
+
+            .movie-poster-large {
+                width: 180px;
+                height: 270px;
+                margin-bottom: 20px;
+            }
+
+            .movie-title {
+                font-size: 32px;
+            }
+
+            .booking-container {
+                padding: 20px;
+            }
+
+            .booking-header {
+                grid-template-columns: 1fr;
+                gap: 30px;
+                padding: 20px 0;
+                min-width: 0;
+            }
+
+            .date-selector {
+                width: 100%;
+                min-width: 0;
+            }
+
+            .date-scroll-wrapper {
+                width: 100%;
+                max-width: 100%;
+                padding: 0 10px;
+            }
+
+            .seat-selection {
+                flex-direction: column;
+                gap: 30px;
+                padding: 20px 0;
+            }
+
+            .theater {
+                width: 100%;
+                overflow-x: auto;
+                padding-bottom: 20px;
+            }
+            
+            .seats-container {
+                min-width: 600px;
+                margin: 0 auto;
+            }
+
+            .seat {
+                width: 25px;
+                height: 25px;
+            }
+            
+            .seat-gap {
+                width: 20px;
+            }
+
+            .order-summary {
+                width: 100%;
+            }
+        }
     </style>
 </head>
-<body>
-    <header>
-        <a href="index.php" class="logo">Tiketin</a>
+<body> 
+    <header> 
+        <a class="logo">Tiketin</a>
         <nav>
             <a href="index.php">Movies</a>
             <a href="cinemas.php">Cinemas</a>
             <a href="tickets.php">Tickets</a>
         </nav>
-        <div class="auth-buttons">
-            <a href="#login" class="btn btn-login">Login</a>
-            <a href="#signup" class="btn btn-signup">Sign Up</a>
+        <div class="auth-buttons"> 
+            <?php if (isset($_SESSION['nama_lengkap'])): ?>
+                <div class="user-dropdown">
+                    <a href="#" class="user-name-btn">
+                       <?php echo htmlspecialchars($_SESSION['nama_lengkap']); ?> ▾
+                    </a>
+                    <div class="dropdown-content">
+                        <a href="logout.php" class="logout-link">Logout</a>
+                    </div>
+                </div>
+            <?php else: ?>
+                <a href="login.php" class="btn btn-login">Login</a>
+                <a href="register.php" class="btn btn-signup">Sign Up</a>
+            <?php endif; ?>
         </div>
     </header>
 
@@ -534,7 +763,7 @@
             5 => [
                 'title' => 'Captain America: Civil War',
                 'category' => 'Captain America',
-                'poster' => 'https://image.tmdb.org/t/p/w500/rAGiXaUfPu0D8FaeOJMHV4gKLJi.jpg'
+                'poster' => 'https://media.themoviedb.org/t/p/w440_and_h660_face/uymMGErUAUXElLJE4jTUrDMT7wr.jpg'
             ],
             6 => [
                 'title' => 'Spider-Man: Far From Home',
@@ -646,7 +875,7 @@
                             $occupied = in_array($seatId, $occupiedSeats) ? 'occupied' : '';
                             
                             if ($i == 10) {
-                                echo '<div style="width: 40px;"></div>'; // Jarak tengah
+                                echo '<div class="seat-gap"></div>'; // Jarak tengah
                             }
                             
                             echo '<div class="seat ' . $occupied . '" data-seat="' . $seatId . '"></div>';
@@ -673,7 +902,7 @@
             <div class="order-summary">
                 <h3>Selected Seats:</h3>
                 <div class="selected-seats-list" id="selectedSeatsList">
-                    <p style="color: #888; text-align: center;">No seats selected</p>
+                    <p class="empty-seats">No seats selected</p>
                 </div>
                 <div class="total-price">
                     Total: <span id="totalPrice">Rp0</span>
@@ -683,142 +912,191 @@
         </div>
     </div>
 
+    
+    <form id="bookingForm" action="process_book.php" method="POST" class="hidden-form">
+        <input type="hidden" name="movie_title" id="movie_title" value="<?php echo htmlspecialchars($currentMovie['title']); ?>">
+        <input type="hidden" name="date" id="formDate">
+        <input type="hidden" name="time" id="formTime">
+        <input type="hidden" name="seats" id="formSeats">
+        <input type="hidden" name="price" id="formPrice">
+    </form>
+
     <script>
         const seatPrice = 35000;
         let selectedSeats = [];
         let selectedDate = null;
-        let selectedTime = null;
+        let selectedTime = null; // Akan diisi nanti saat tombol jam diklik/diload
 
-        // Scroll dates function
-        function scrollDates(direction) {
-            const container = document.getElementById('datesScrollContainer');
-            const scrollAmount = 250; // Scroll by approximately 3 dates
-            
-            if (direction === 'left') {
-                container.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
-            } else {
-                container.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+        // Judul Film dari PHP
+        const movieTitle = "<?php echo $currentMovie['title']; ?>";
+
+        // --- 1. FUNGSI UTAMA CEK KURSI ---
+        function checkAvailability() {
+            // Hanya jalan kalau tanggal DAN jam sudah terisi
+            if (selectedDate && selectedTime) {
+                
+                // A. RESET TAMPILAN (PENTING!)
+                // Hapus semua status warna dari kursi sebelum cek database baru
+                document.querySelectorAll('.seat').forEach(seat => {
+                    seat.classList.remove('occupied');   // Hapus abu-abu
+                    seat.classList.remove('selected');   // Hapus kuning (pilihan user direset saat ganti jam)
+                    seat.classList.remove('my-booking'); // Hapus biru (FIX: Ini yang sebelumnya kurang)
+                });
+
+                // Reset array pilihan user karena ganti jadwal
+                selectedSeats = []; 
+                updateOrderSummary();
+
+                console.log(`Cek Database: ${movieTitle} | ${selectedDate} | ${selectedTime}`);
+
+                // B. REQUEST KE DATABASE
+                // Tambah parameter nocache agar browser tidak menyimpan data lama
+                const timestamp = new Date().getTime(); 
+                const url = `check_seats.php?title=${encodeURIComponent(movieTitle)}&date=${selectedDate}&time=${selectedTime}&nocache=${timestamp}`;
+
+                fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    // Data JSON diterima: [{seat: "A-1", status: "occupied"}, ...]
+                    data.forEach(item => {
+                        // Cari elemen HTML kursi yang sesuai
+                        const seatElement = document.querySelector(`.seat[data-seat="${item.seat}"]`);
+                        
+                        if (seatElement) {
+                            if (item.status === 'mine') {
+                                seatElement.classList.add('my-booking'); // Biru (Punya Saya)
+                            } else {
+                                seatElement.classList.add('occupied'); // Abu-abu (Punya Orang)
+                            }
+                        }
+                    });
+                })
+                .catch(error => console.error('Gagal mengambil data kursi:', error));
             }
-            
-            // Update button states after scroll
-            setTimeout(updateScrollButtons, 300);
         }
 
-        // Update scroll button states
-        function updateScrollButtons() {
-            const container = document.getElementById('datesScrollContainer');
-            const leftBtn = document.getElementById('scrollLeftBtn');
-            const rightBtn = document.getElementById('scrollRightBtn');
-            
-            // Check if at start
-            if (container.scrollLeft <= 0) {
-                leftBtn.disabled = true;
-            } else {
-                leftBtn.disabled = false;
-            }
-            
-            // Check if at end
-            if (container.scrollLeft + container.clientWidth >= container.scrollWidth - 1) {
-                rightBtn.disabled = true;
-            } else {
-                rightBtn.disabled = false;
-            }
-        }
-
-        // Generate dates dynamically (next 14 days for scrolling)
+        // --- 2. GENERATE TANGGAL (Calendar) ---
         function generateDates() {
             const datesContainer = document.getElementById('datesContainer');
-            const today = new Date();
+            const today = new Date(); 
             const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
             const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
             
-            // Generate 14 days instead of 7 for scrolling
             for (let i = 0; i < 14; i++) {
                 const date = new Date(today);
                 date.setDate(today.getDate() + i);
                 
-                const dayName = days[date.getDay()];
-                const dateNumber = date.getDate();
-                const monthName = months[date.getMonth()];
-                const fullDate = date.toISOString().split('T')[0];
+                // Format YYYY-MM-DD
+                const year = date.getFullYear();
+                const month = String(date.getMonth() + 1).padStart(2, '0');
+                const day = String(date.getDate()).padStart(2, '0');
+                const fullDate = `${year}-${month}-${day}`;
                 
                 const btn = document.createElement('button');
-                btn.className = 'date-btn' + (i === 0 ? ' active' : '');
+                // Jika hari ini (i==0), otomatis aktif
+                const isActive = (i === 0);
+                btn.className = 'date-btn' + (isActive ? ' active' : '');
                 btn.dataset.date = fullDate;
+                
                 btn.innerHTML = `
-                    <span class="day-name">${dayName}</span>
-                    <span class="date-number">${dateNumber}</span>
-                    <span class="month-name">${monthName}</span>
+                    <span class="day-name">${days[date.getDay()]}</span>
+                    <span class="date-number">${date.getDate()}</span>
+                    <span class="month-name">${months[date.getMonth()]}</span>
                 `;
                 
+                // Event Klik Tanggal
                 btn.addEventListener('click', function() {
+                    // Hapus aktif di tombol lain
                     document.querySelectorAll('.date-btn').forEach(b => b.classList.remove('active'));
                     this.classList.add('active');
+                    
+                    // Set variabel global
                     selectedDate = this.dataset.date;
-                    console.log('Selected date:', selectedDate);
+                    
+                    // Panggil Cek Kursi
+                    checkAvailability();
                 });
                 
                 datesContainer.appendChild(btn);
                 
-                // Set initial selected date
-                if (i === 0) {
-                    selectedDate = fullDate;
-                }
+                // Set default variable saat looping pertama
+                if (isActive) selectedDate = fullDate;
             }
-            
-            // Initialize scroll buttons
             updateScrollButtons();
-            
-            // Add scroll listener to update buttons
-            const container = document.getElementById('datesScrollContainer');
-            container.addEventListener('scroll', updateScrollButtons);
         }
 
-        // Initialize dates on page load
-        generateDates();
+        // --- 3. LOGIC TOMBOL JAM ---
+        document.querySelectorAll('.time-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                // Hapus aktif di tombol lain
+                document.querySelectorAll('.time-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                
+                // Set variabel global
+                selectedTime = this.textContent; // Mengambil teks "11.15", "12.40", dst
+                
+                // Panggil Cek Kursi
+                checkAvailability();
+            });
+        });
 
-        // Seat selection logic
-        document.querySelectorAll('.seat:not(.occupied)').forEach(seat => {
+        // --- 4. LOGIC KLIK KURSI ---
+        document.querySelectorAll('.seat').forEach(seat => {
             seat.addEventListener('click', function() {
+                // Cek apakah kursi disable (Abu atau Biru)
+                if (this.classList.contains('occupied') || this.classList.contains('my-booking')) {
+                    return; // Tidak bisa diklik
+                }
+
                 const seatId = this.dataset.seat;
                 
+                // Toggle Pilih/Batal Pilih
                 if (this.classList.contains('selected')) {
                     this.classList.remove('selected');
-                    selectedSeats = selectedSeats.filter(s => s !== seatId);
+                    selectedSeats = selectedSeats.filter(s => s !== seatId); // Hapus dari array
                 } else {
                     this.classList.add('selected');
-                    selectedSeats.push(seatId);
+                    selectedSeats.push(seatId); // Tambah ke array
                 }
-                
                 updateOrderSummary();
             });
         });
 
+        // --- 5. LOGIC REMOVE SEAT (Tanda silang di summary) ---
+        function removeSeat(seatId) {
+            const seatEl = document.querySelector(`[data-seat="${seatId}"]`);
+            if (seatEl) seatEl.classList.remove('selected');
+            
+            selectedSeats = selectedSeats.filter(s => s !== seatId);
+            updateOrderSummary();
+        }
+
+        // --- 6. UPDATE SUMMARY HARGA ---
         function updateOrderSummary() {
             const seatsList = document.getElementById('selectedSeatsList');
             const totalPrice = document.getElementById('totalPrice');
             const checkoutBtn = document.getElementById('checkoutBtn');
             
             if (selectedSeats.length === 0) {
-                seatsList.innerHTML = '<p style="color: #888; text-align: center;">No seats selected</p>';
+                seatsList.innerHTML = '<p class="empty-seats">No seats selected</p>';
                 totalPrice.textContent = 'Rp0';
                 checkoutBtn.disabled = true;
                 checkoutBtn.textContent = 'Bayar (Rp0)';
             } else {
                 let html = '';
                 selectedSeats.forEach(seatId => {
-                    const rowLabel = seatId.split('-')[0];
-                    const seatNumber = seatId.split('-')[1];
+                    const parts = seatId.split('-');
+                    const displaySeat = parts[0] + parts[1]; // Ubah "A-1" jadi "A1" biar rapi
+                    
                     html += `
                         <div class="seat-item">
-                            <span>${rowLabel}${seatNumber}</span>
+                            <span>${displaySeat}</span>
                             <span>Rp${seatPrice.toLocaleString('id-ID')}</span>
                             <button class="remove-seat" onclick="removeSeat('${seatId}')">×</button>
                         </div>
                     `;
                 });
                 seatsList.innerHTML = html;
-                
                 const total = selectedSeats.length * seatPrice;
                 totalPrice.textContent = 'Rp' + total.toLocaleString('id-ID');
                 checkoutBtn.disabled = false;
@@ -826,77 +1104,63 @@
             }
         }
 
-        function removeSeat(seatId) {
-            document.querySelector(`[data-seat="${seatId}"]`).classList.remove('selected');
-            selectedSeats = selectedSeats.filter(s => s !== seatId);
-            updateOrderSummary();
-        }
-
-        // Time selector
-        document.querySelectorAll('.time-btn').forEach(btn => {
-            btn.addEventListener('click', function() {
-                document.querySelectorAll('.time-btn').forEach(b => b.classList.remove('active'));
-                this.classList.add('active');
-                selectedTime = this.textContent;
-                console.log('Selected time:', selectedTime);
-            });
-        });
-
-        // Set initial time
-        selectedTime = document.querySelector('.time-btn.active').textContent;
-
-        // Checkout
+        // --- 7. SUBMIT FORM (CHECKOUT) ---
         document.getElementById('checkoutBtn').addEventListener('click', function() {
             if (selectedSeats.length > 0) {
-                const bookingDetails = `
-                Booking Confirmed! 🎬
-
-                Movie: <?php echo addslashes($currentMovie['title']); ?>
-                Date: ${formatDate(selectedDate)}
-                Time: ${selectedTime}
-                Seats: ${selectedSeats.join(', ')}
-                Total: Rp${(selectedSeats.length * seatPrice).toLocaleString('id-ID')}
-                `;
-                alert(bookingDetails);
+                if (!selectedDate || !selectedTime) {
+                    alert('Harap pilih Tanggal dan Jam tayang!');
+                    return;
+                }
                 
-                // Optional: Send to backend
-                // submitBooking(selectedDate, selectedTime, selectedSeats);
+                // Isi Input Hidden sebelum submit
+                document.getElementById('formDate').value = selectedDate; 
+                document.getElementById('formTime').value = selectedTime;
+                document.getElementById('formSeats').value = selectedSeats.join(','); // Kirim "A-1,A-2"
+                document.getElementById('formPrice').value = selectedSeats.length * seatPrice;
+                
+                // Submit
+                document.getElementById('bookingForm').submit();
             }
         });
 
-        function formatDate(dateString) {
-            const date = new Date(dateString);
-            const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-            const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-            
-            return `${days[date.getDay()]}, ${date.getDate()} ${months[date.getMonth()]} ${date.getFullYear()}`;
+        // --- 8. HELPER SCROLL (UI) ---
+        function scrollDates(direction) {
+            const container = document.getElementById('datesScrollContainer');
+            const scrollAmount = 250; 
+            if (direction === 'left') {
+                container.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
+            } else {
+                container.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+            }
+            setTimeout(updateScrollButtons, 300);
         }
 
-        // Optional: Function to submit booking to backend
-        function submitBooking(date, time, seats) {
-            const bookingData = {
-                movie_id: <?php echo $movieId; ?>,
-                date: date,
-                time: time,
-                seats: seats,
-                total: seats.length * seatPrice
-            };
-            
-            // Send to backend via fetch/AJAX
-            // fetch('process_booking.php', {
-            //     method: 'POST',
-            //     headers: {'Content-Type': 'application/json'},
-            //     body: JSON.stringify(bookingData)
-            // })
-            // .then(response => response.json())
-            // .then(data => {
-            //     if(data.success) {
-            //         window.location.href = 'payment.php?booking_id=' + data.booking_id;
-            //     }
-            // });
-            
-            console.log('Booking data:', bookingData);
+        function updateScrollButtons() {
+            const container = document.getElementById('datesScrollContainer');
+            const leftBtn = document.getElementById('scrollLeftBtn');
+            const rightBtn = document.getElementById('scrollRightBtn');
+            leftBtn.disabled = container.scrollLeft <= 0;
+            rightBtn.disabled = container.scrollLeft + container.clientWidth >= container.scrollWidth - 1;
         }
+
+        // --- 9. INISIALISASI ---
+        // Jalankan fungsi
+        generateDates();
+        document.getElementById('datesScrollContainer').addEventListener('scroll', updateScrollButtons);
+
+        // Ambil jam default yang aktif (biasanya tombol pertama/hardcoded active)
+        const activeTimeBtn = document.querySelector('.time-btn.active');
+        if (activeTimeBtn) {
+            selectedTime = activeTimeBtn.textContent;
+        }
+
+        // Panggil Cek Kursi Pertama Kali (Saat halaman selesai loading)
+        checkAvailability();
+
     </script>
+
+    <footer>
+        <p>&copy; 2025 Tiketin. All rights reserved.</p>
+    </footer>
 </body>
 </html>
